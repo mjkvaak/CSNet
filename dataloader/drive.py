@@ -25,7 +25,7 @@ def load_dataset(root_dir, train=True):
 
     for file in glob.glob(os.path.join(images_path, '*.tif')):
         image_name = os.path.basename(file)
-        groundtruth_name = image_name.replace("images/","masks/").replace(".tif","_centerline_overlay.tif")
+        groundtruth_name = image_name.replace("images/","masks/")
 
         images.append(os.path.join(images_path, image_name))
         groundtruth.append(os.path.join(groundtruth_path, groundtruth_name))
