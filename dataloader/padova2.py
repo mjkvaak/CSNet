@@ -11,21 +11,23 @@ warnings.filterwarnings('ignore')
 
 
 def load_dataset(root_dir, train=True):
-    labels = []
     images = []
+    groundtruth = []
     if train:
         sub_dir = 'training'
     else:
         sub_dir = 'test'
-    label_path = os.path.join(root_dir, sub_dir, 'label2')
-    image_path = os.path.join(root_dir, sub_dir, 'images')
+    images_path = os.path.join(root_dir, sub_dir, 'images')
+    groundtruth_path = os.path.join(root_dir, sub_dir, 'masks')
 
-    for file in glob.glob(os.path.join(image_path, '*.tif')):
+    for file in glob.glob(os.path.join(images_path, '*.tif')):
         image_name = os.path.basename(file)
-        label_name = image_name[:-4] + '_centerline_overlay.tif'
-        labels.append(os.path.join(label_path, label_name))
-        images.append(os.path.join(image_path, image_name))
-    return images, labels
+        groundtruth_name = image_name.replace("images/","masks/")
+
+        images.append(os.path.join(images_path, image_name))
+        groundtruth.append(os.path.join(groundtruth_path, groundtruth_name))
+
+    return images, groundtruth
 
 
 class Data(Dataset):
@@ -79,7 +81,7 @@ class Data(Dataset):
         gt_path = self.groundtruth[idx]
 
         image = Image.open(img_path)
-        label = Image.open(gt_path)
+        label = Image.open(gt_path).convert("L")
 
         # image = ReScaleSize(image, self.resize)
         # label = ReScaleSize(label, self.resize)
