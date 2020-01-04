@@ -94,7 +94,7 @@ class Data(Dataset):
         img_path = self.images[idx]
         gt_path = self.groundtruth[idx]
         image = Image.open(img_path)
-        label = Image.open(gt_path)
+        label = Image.open(gt_path).convert('LA')
 
         image = self.rescale(image, self.resize)
         label = self.rescale(label, self.resize)
